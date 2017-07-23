@@ -124,6 +124,14 @@ function mod:addsTimer()
 	end
 end
 
+function mod:warnSpiritFollow()
+    local status = UnitThreatSituation("player")
+    if (status == 3) then
+        specWarnVengefulShade:Show()
+        SendChatMessage("Geist vll auf mir.", "SAY")
+    end
+end
+
 function mod:TrySetTarget()
 	if DBM:GetRaidRank() >= 1 then
 		for i = 1, GetNumRaidMembers() do
@@ -233,6 +241,7 @@ function mod:SPELL_SUMMON(args)
 		if time() - lastSpirit > 5 then
 			warnSummonSpirit:Show()
 			timerSummonSpiritCD:Start()
+            self:ScheduleMethod(4, "warnSpiritFollow")
 			lastSpirit = time()
 		end
 	end
@@ -241,6 +250,7 @@ end
 function mod:SWING_DAMAGE(args)
 	if args:IsPlayer() and args:GetSrcCreatureID() == 38222 then
 		specWarnVengefulShade:Show()
+        SendChatMessage("Geist vll triggered.", "SAY")
 	end
 end
 
